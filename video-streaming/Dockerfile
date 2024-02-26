@@ -10,4 +10,6 @@ COPY ./src ./src
 
 COPY ./videos ./videos
 
+RUN export PORT=3000
+
 CMD npm start
