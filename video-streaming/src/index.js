@@ -37,21 +37,21 @@ app.get('/', (req, res) => {
 });
 
 app.get('/video', (req, res) => {
-	const path = "./videos/video_of_a_creepy_animal (1080p).mp4";
-	fs.stat(path, (err, stats) => {
-		if (err) {
-			console.error('An error occurred: ', err);
-			res.sendStatus(500);
-			return;
+	const forwardRequest = http.request(
+		{
+			host: VIDEO_STORAGE_HOST,
+			port: VIDEO_STORAGE_PORT,
+			path: '/video?path=video_of_a_creepy_animal%20(1080p).mp4',
+			method: 'GET',
+			headers: req.headers
+		},
+		(forwardResponse) => {
+			res.writeHeader(forwardResponse.statusCode, forwardResponse.headers);
+			forwardResponse.pipe(res);
 		}
+	);
 
-		res.writeHead(200, {
-			'Content-Length': stats.size,
-			'Content-Type': 'video/mp4',
-		});
-		fs.createReadStream(path).pipe(res);
-		//node.js streams are readable, writable, or both
-	});
+	req.pipe(forwardRequest);
 });
 //
 // Starts the HTTP server.

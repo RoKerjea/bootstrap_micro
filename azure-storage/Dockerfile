@@ -8,6 +8,6 @@ RUN npm install --only=production
 
 COPY ./src ./src
 
-# RUN export PORT=3001
+# RUN export PORT=3000
 
 CMD npm start
