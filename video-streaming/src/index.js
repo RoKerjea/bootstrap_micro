@@ -61,7 +61,7 @@ function main() {
                         }
 
                         console.log(`Translated id ${videoId} to path ${videoRecord.videoPath}.`);
-        
+
                         const forwardRequest = http.request( // Forward the request to the video storage microservice.
                             {
                                 host: VIDEO_STORAGE_HOST,
@@ -69,13 +69,12 @@ function main() {
                                 path:`/video?path=${videoRecord.videoPath}`, // Video path now retrieved from the database.
                                 method: 'GET',
                                 headers: req.headers
-                            }, 
+                            },
                             forwardResponse => {
                                 res.writeHeader(forwardResponse.statusCode, forwardResponse.headers);
                                 forwardResponse.pipe(res);
                             }
                         );
-                        
                         req.pipe(forwardRequest);
                     })
                     .catch(err => {
